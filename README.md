@@ -370,7 +370,7 @@ Edit `config.py` to customize settings:
 class Config:
     # Model settings
     MODEL_PATH = 'models/weights/research_grade_ensemble_model.h5'
-    IMG_SIZE = 384                    # Input image size
+    IMG_SIZE = 224                   # Input image size
     BATCH_SIZE = 1                    # Prediction batch size
     
     # Upload settings
@@ -460,7 +460,7 @@ MIT License - feel free to use this project for educational and commercial purpo
 
 ## 👨‍💼 Author
 
-**Vineet Kumar**
+**Aman Raghav**
 - GitHub: [@amanraghavkumar](https://github.com/amanraghavkumar)
 - Email: amanraghav19722@gmail.com
 
