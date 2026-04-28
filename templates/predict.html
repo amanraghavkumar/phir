@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-lg py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2 class="mb-4">
+                <i class="fas fa-upload"></i> Analyze Medical Image
+            </h2>
+
+            <!-- Upload Area -->
+            <div class="upload-area card mb-4">
+                <div class="card-body">
+                    <div class="upload-zone" id="uploadZone">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-primary"></i>
+                        <h5>Drop your image here or click to select</h5>
+                        <p class="text-muted small">Supported formats: JPG, PNG, GIF (Max 50MB)</p>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div id="previewContainer" class="card mb-4" style="display: none;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Selected Image:</h6>
+                            <img id="previewImage" src="" alt="Preview" class="img-fluid rounded" style="max-height: 300px;">
+                        </div>
+                        <div class="col-md-6">
+                            <h6>File Information:</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Name:</strong> <span id="fileName"></span></li>
+                                <li><strong>Size:</strong> <span id="fileSize"></span></li>
+                                <li><strong>Type:</strong> <span id="fileType"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mb-4">
+                <button id="analyzeBtn" class="btn btn-primary btn-lg w-100" disabled onclick="analyzeImage()">
+                    <i class="fas fa-magic"></i> Analyze Image
+                </button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingContainer" style="display: none;" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Analyzing image... Please wait</p>
+            </div>
+
+            <!-- Results -->
+            <div id="resultsContainer" style="display: none;">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-check-circle"></i> Analysis Results
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Predicted Class -->
+                        <div class="mb-4">
+                            <h6>Predicted Class:</h6>
+                            <div class="alert alert-info mb-0">
+                                <h4 id="predictedClass" class="mb-0">-</h4>
+                            </div>
+                        </div>
+
+                        <!-- Confidence -->
+                        <div class="mb-4">
+                            <h6>Confidence Score:</h6>
+                            <div class="progress" style="height: 30px;">
+                                <div id="confidenceBar" class="progress-bar bg-success" role="progressbar" style="width: 0%;">
+                                    <span id="confidenceText">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- All Probabilities -->
+                        <div class="mb-4">
+                            <h6>Class Probabilities:</h6>
+                            <div id="probabilitiesContainer"></div>
+                        </div>
+
+                        <!-- Processing Time -->
+                        <div class="mb-0">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> Processing time: <span id="processingTime">-</span>s
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorContainer" style="display: none;">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorMessage"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.upload-zone {
+    border: 3px dashed #007bff;
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.upload-zone:hover {
+    border-color: #0056b3;
+    background-color: #f0f7ff;
+}
+
+.upload-zone.dragover {
+    border-color: #28a745;
+    background-color: #f0fff4;
+}
+</style>
+
+<script>
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const previewContainer = document.getElementById('previewContainer');
+const previewImage = document.getElementById('previewImage');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const loadingContainer = document.getElementById('loadingContainer');
+const resultsContainer = document.getElementById('resultsContainer');
+const errorContainer = document.getElementById('errorContainer');
+
+// Click to upload
+uploadZone.addEventListener('click', () => fileInput.click());
+
+// Drag and drop
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+});
+
+uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+});
+
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        handleFileSelect(files[0]);
+    }
+});
+
+// File input change
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+    }
+});
+
+// Handle file selection
+function handleFileSelect(file) {
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+        showError('Invalid file type. Please upload JPG, PNG, or GIF.');
+        return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+        showError('File too large. Maximum size is 50MB.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewContainer.style.display = 'block';
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        document.getElementById('fileType').textContent = file.type;
+        analyzeBtn.disabled = false;
+        errorContainer.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+
+function analyzeImage() {
+    const file = fileInput.files[0];
+    if (!file) {
+        showError('Please select an image first');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    loadingContainer.style.display = 'block';
+    resultsContainer.style.display = 'none';
+    errorContainer.style.display = 'none';
+
+    fetch('/predict', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadingContainer.style.display = 'none';
+
+        if (data.success) {
+            displayResults(data);
+        } else {
+            showError(data.error || 'Prediction failed');
+        }
+    })
+    .catch(error => {
+        loadingContainer.style.display = 'none';
+        showError('Error: ' + error.message);
+    });
+}
+
+function displayResults(data) {
+    document.getElementById('predictedClass').textContent = data.predicted_class;
+
+    const confidence = data.confidence;
+    document.getElementById('confidenceBar').style.width = confidence + '%';
+    document.getElementById('confidenceText').textContent = confidence.toFixed(2) + '%';
+
+    const probsHtml = Object.entries(data.probabilities).map(([className, prob]) => `
+        <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+                <small><strong>${className}</strong></small>
+                <small>${prob.toFixed(2)}%</small>
+            </div>
+            <div class="progress" style="height: 20px;">
+                <div class="progress-bar" style="width: ${prob}%"></div>
+            </div>
+        </div>
+    `).join('');
+    document.getElementById('probabilitiesContainer').innerHTML = probsHtml;
+
+    document.getElementById('processingTime').textContent = data.processing_time;
+
+    resultsContainer.style.display = 'block';
+}
+
+function showError(message) {
+    document.getElementById('errorMessage').textContent = message;
+    errorContainer.style.display = 'block';
+}
+</script>
+{% endblock %}

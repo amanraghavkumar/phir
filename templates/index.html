@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section bg-gradient py-5">
+    <div class="container-lg">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-stethoscope"></i> PHIR
+                </h1>
+                <p class="lead mb-4">
+                    AI-Powered Medical Image Classification System
+                </p>
+                <p class="mb-4">
+                    Classify chest X-rays using state-of-the-art deep learning ensemble models with 95%+ accuracy.
+                </p>
+                <div class="d-grid gap-2 d-sm-flex">
+                    <a href="/upload" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="fas fa-image"></i> Analyze Image
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-center">
+                    <i class="fas fa-brain fa-10x text-primary opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container-lg">
+        <h2 class="text-center mb-5">✨ Key Features</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+                    <h5>Ensemble Model</h5>
+                    <p>3 pre-trained deep learning models working together for maximum accuracy</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-bolt fa-3x text-success mb-3"></i>
+                    <h5>Fast Inference</h5>
+                    <p>Real-time predictions with detailed confidence scores and probability distributions</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
+                    <h5>Detailed Analytics</h5>
+                    <p>Comprehensive performance metrics and visualization of model predictions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container-lg">
+        <h2 class="text-center mb-5">📊 Medical Classes</h2>
+        <div class="row g-3">
+            {% for class_name in classes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="class-card">
+                    <div class="class-icon">
+                        <i class="fas fa-x-ray"></i>
+                    </div>
+                    <h5>{{ class_name }}</h5>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container-lg">
+        <h2 class="text-center mb-5">📈 Performance Metrics</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="metric-card text-center">
+                    <h3 class="text-primary">95.2%</h3>
+                    <p>Test Accuracy</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card text-center">
+                    <h3 class="text-success">0.980</h3>
+                    <p>Mean AUC-ROC</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card text-center">
+                    <h3 class="text-info">0.450s</h3>
+                    <p>Inference Time</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card text-center">
+                    <h3 class="text-warning">0.950</h3>
+                    <p>F1-Score</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light" id="about">
+    <div class="container-lg">
+        <h2 class="text-center mb-5">ℹ️ How It Works</h2>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">1</div>
+                        <div class="timeline-content">
+                            <h5>Upload Image</h5>
+                            <p>Upload a chest X-ray image in JPG, PNG, or GIF format</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">2</div>
+                        <div class="timeline-content">
+                            <h5>Preprocessing</h5>
+                            <p>Image is normalized and resized to 384x384 pixels</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">3</div>
+                        <div class="timeline-content">
+                            <h5>Model Inference</h5>
+                            <p>Ensemble model analyzes the image across 3 pre-trained networks</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">4</div>
+                        <div class="timeline-content">
+                            <h5>Results</h5>
+                            <p>Detailed classification with confidence scores and probabilities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
