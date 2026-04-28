@@ -15,18 +15,11 @@
 ## System Requirements
 
 ### Minimum Requirements
-- **OS**: Windows 10/11, macOS 10.14+, Linux (Ubuntu 18.04+)
+- **OS**: Windows 10/11
 - **CPU**: Intel i5 or equivalent
 - **RAM**: 8GB (16GB recommended)
 - **Storage**: 2GB free space (including model)
 - **Python**: 3.8 or higher
-
-### Recommended Requirements
-- **OS**: Linux (Ubuntu 20.04+)
-- **CPU**: Intel i7 or AMD Ryzen 7
-- **RAM**: 16GB or more
-- **GPU**: NVIDIA GPU with CUDA support (optional but recommended)
-- **Storage**: SSD with 10GB free space
 
 ### Software Dependencies
 - Python 3.8+
@@ -38,52 +31,7 @@
 
 ## Installation Methods
 
-### Method 1: Automated Setup Script (Recommended)
-
-#### Option A: Linux/macOS (Bash)
-
-```bash
-# Clone repository
-git clone https://github.com/vineet-5581/phir.git
-cd phir
-
-# Run setup script
-bash setup.sh
-```
-
-**What setup.sh does:**
-- ✅ Checks Python version
-- ✅ Creates virtual environment
-- ✅ Installs all dependencies
-- ✅ Creates necessary directories
-- ✅ Checks for model file
-- ✅ Starts the application
-
-#### Option B: Windows (PowerShell)
-
-```powershell
-# Clone repository
-git clone https://github.com/amanraghavkumar/phir.git
-cd phir
-
-# Run setup script (Run PowerShell as Administrator)
-.\setup.ps1
-```
-
-#### Option C: Python Setup Script (Cross-Platform)
-
-```bash
-# Clone and setup
-git clone https://github.com/amanraghavkumar/phir.git
-cd phir
-
-# Run Python setup
-python setup.py
-```
-
----
-
-### Method 2: Manual Step-by-Step Setup
+### Method 1: Manual Step-by-Step Setup
 
 #### Step 1: Clone Repository
 
