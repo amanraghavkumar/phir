@@ -24,30 +24,8 @@ PHIR (Medical Imaging System) is a production-ready web application that uses an
 
 ## 🚀 Quick Start
 
-### Option 1: Automated Setup (Recommended)
 
-#### On macOS/Linux:
-```bash
-git clone https://github.com/vineet-5581/phir.git
-cd phir
-bash setup.sh
-```
-
-#### On Windows (PowerShell as Admin):
-```powershell
-git clone https://github.com/vineet-5581/phir.git
-cd phir
-.\setup.ps1
-```
-
-#### Or use Python (Cross-Platform):
-```bash
-git clone https://github.com/vineet-5581/phir.git
-cd phir
-python setup.py
-```
-
-### Option 2: Manual Setup
+### Option 1: Manual Setup
 
 #### Prerequisites
 - Python 3.8 or higher
@@ -169,8 +147,6 @@ phir/
 ├── requirements.txt               # Python dependencies
 ├── config.py                      # Configuration settings
 ├── app.py                         # Flask application
-├── setup.sh                       # Linux/macOS setup script
-├── setup.ps1                      # Windows PowerShell setup
 ├── setup.py                       # Python setup script
 │
 ├── models/
