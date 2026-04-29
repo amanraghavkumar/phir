@@ -19,7 +19,7 @@ class Config:
     # Model
     MODEL_PATH = os.path.join(BASEDIR, 'models', 'weights', 're_model.h5')
     IMG_SIZE = 224
-    BATCH_SIZE = 1
+    BATCH_SIZE = 16
     
     # Classes
     CLASSES = [

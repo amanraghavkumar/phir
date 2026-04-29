@@ -28,19 +28,23 @@ preprocessor = ImagePreprocessor(img_size=app.config['IMG_SIZE'])
 validator = ImageValidator(app.config['ALLOWED_EXTENSIONS'], app.config['MAX_CONTENT_LENGTH'])
 
 # Load model
+
 try:
     classifier = MedicalClassifier(
         app.config['MODEL_PATH'],
         class_names=app.config['CLASSES']
     )
-    logger.log_info("Model loaded successfully")
+    if classifier.is_loaded:
+        logger.log_info("Medical Classifier initialized successfully.")
+    else:
+        # Agar error aaye toh hum stop nahi karenge, par log zaroor karenge
+        logger.log_error("CRITICAL: Classifier failed to load model file.")
 except Exception as e:
     classifier = None
-    logger.log_error(f"Failed to load model: {str(e)}")
+    logger.log_error(f"Failed to initialize components: {str(e)}")
 
-# ============================================================================
+    
 # ROUTES
-# ============================================================================
 
 @app.route('/')
 def index():
@@ -185,9 +189,8 @@ def get_classes():
         'num_classes': len(app.config['CLASSES'])
     }), 200
 
-# ============================================================================
+
 # ERROR HANDLERS
-# ============================================================================
 
 @app.errorhandler(404)
 def not_found(error):
@@ -202,9 +205,8 @@ def internal_error(error):
 def request_entity_too_large(error):
     return jsonify(ResponseFormatter.error("File too large", 413)), 413
 
-# ============================================================================
+
 # STARTUP & SHUTDOWN
-# ============================================================================
 
 @app.before_request
 def before_request():
@@ -218,9 +220,8 @@ def after_request(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     return response
 
-# ============================================================================
+
 # RUN APP
-# ============================================================================
 
 if __name__ == '__main__':
     logger.log_info("Starting PHIR Medical Image Classification System")
